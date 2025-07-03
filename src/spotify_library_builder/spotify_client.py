@@ -10,6 +10,7 @@ from a playlist.
 import base64
 import logging
 from dataclasses import dataclass
+from datetime import datetime
 from typing import List
 
 import requests
@@ -25,6 +26,7 @@ class Track:
 
     title: str
     artists: List[str]
+    added_at: datetime
 
     @property
     def search_query(self) -> str:
@@ -81,7 +83,22 @@ class SpotifyClient:
 
                 title = track_info.get("name", "Unknown Title")
                 artists = [artist.get("name", "") for artist in track_info.get("artists", [])]
-                tracks.append(Track(title=title, artists=artists))
+
+                # The Spotify API provides an ISO 8601 timestamp of when the track was added
+                added_raw = item.get("added_at")  # e.g. "2025-07-02T17:55:19Z"
+                try:
+                    if added_raw and added_raw.endswith("Z"):
+                        added_at = datetime.fromisoformat(added_raw.replace("Z", "+00:00"))
+                    elif added_raw:
+                        added_at = datetime.fromisoformat(added_raw)
+                    else:
+                        # Fallback to epoch if something is missing – should not normally happen
+                        added_at = datetime.fromtimestamp(0)
+                except ValueError:
+                    logger.warning("Unexpected added_at format '%s' – defaulting to epoch", added_raw)
+                    added_at = datetime.fromtimestamp(0)
+
+                tracks.append(Track(title=title, artists=artists, added_at=added_at))
 
             # Spotify API gives us a *next* URL we can follow for pagination
             url = payload.get("next")

@@ -72,6 +72,28 @@ For every run the tool creates a timestamped folder inside the `--output` direct
 
 Progress is shown with a live `tqdm` progress-bar and detailed log output.
 
+### Sample run
+
+```console
+$ sp-lib-builder 0AaeQ5u3BwJue96JkUgG4R -o ~/Downloads
+18:55:11 [INFO] root – Fetching tracks from Spotify playlist 0AaeQ5u3BwJue96JkUgG4R
+18:55:11 [INFO] spotify_library_builder.spotify_client – Fetched 9 tracks from playlist 0AaeQ5u3BwJue96JkUgG4R
+18:55:11 [INFO] root – Found 9 playable tracks
+Processing:   0%| | 0/9 [00:00<?, ?track/s]
+18:55:12 [INFO] spotify_library_builder.converter – [youtube] Extracting URL: https://www.youtube.com/watch?v=cmc8q2dcIMs
+18:55:12 [INFO] spotify_library_builder.converter – [youtube] cmc8q2dcIMs: Downloading webpage
+18:55:13 [INFO] spotify_library_builder.converter – [youtube] cmc8q2dcIMs: Downloading tv client config
+18:55:14 [INFO] spotify_library_builder.converter – [youtube] cmc8q2dcIMs: Downloading tv player API JSON
+18:55:14 [INFO] spotify_library_builder.converter – [youtube] cmc8q2dcIMs: Downloading ios player API JSON
+18:55:15 [INFO] spotify_library_builder.converter – [youtube] cmc8q2dcIMs: Downloading m3u8 information
+18:55:15 [INFO] spotify_library_builder.converter – [info] cmc8q2dcIMs: Downloading 1 format(s): 251
+18:55:16 [INFO] spotify_library_builder.converter – [download] Destination: /Users/godye/SpotifyLibraryBuilderDownloads/sp-lib-builder-07-02-2025-18-55-11/Icon-Jaden.webm
+18:55:16 [INFO] spotify_library_builder.converter – [download] 100% of    3.18MiB in 00:00:00 at 10.69MiB/s
+18:55:16 [INFO] spotify_library_builder.converter – [ExtractAudio] Destination: /Users/godye/SpotifyLibraryBuilderDownloads/sp-lib-builder-07-02-2025-18-55-11/Icon-Jaden.mp3
+18:55:19 [INFO] spotify_library_builder.converter – Deleting original file ...
+18:55:19 [INFO] spotify_library_builder.converter – Saved MP3 to /Users/godye/SpotifyLibraryBuilderDownloads/sp-lib-builder-07-02-2025-18-55-11/Icon-Jaden.mp3
+```
+
 ## Project layout
 
 ```

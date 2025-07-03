@@ -34,7 +34,21 @@ sp-lib-builder <spotify-playlist-id>
 
 # Choose a different root directory
 sp-lib-builder <playlist-id> --output /path/to/library
+
+# Only download tracks added after 1 July 2025 18:00 UTC
+sp-lib-builder <playlist-id> --date-added-threshold 2025-07-01T18:00:00Z
+
+# Only download tracks that appear *after* a particular song in the playlist order
+sp-lib-builder <playlist-id> --song-name-threshold "My Favourite Tune"
 ```
+
+_`--date-added-threshold` and `--song-name-threshold` are mutually exclusive._
+
+### Finding your playlist ID
+
+The playlist ID is the final segment of a Spotify playlist URL. For example, in
+`https://open.spotify.com/playlist/1QmO6l09lG1hQD1ILYBRdK` the ID is
+`1QmO6l09lG1hQD1ILYBRdK`.
 
 For every run the tool creates a timestamped folder inside the `--output` directory, e.g.:
 
@@ -76,6 +90,8 @@ Processing:   0%| | 0/9 [00:00<?, ?track/s]
 18:55:19 [INFO] spotify_library_builder.converter – Deleting original file ...
 18:55:19 [INFO] spotify_library_builder.converter – Saved MP3 to /Users/godye/SpotifyLibraryBuilderDownloads/sp-lib-builder-07-02-2025-18-55-11/Icon-Jaden.mp3
 ```
+
+[More sample runs](https://gist.github.com/lrudolph333/557121d89587fa7c9199008d9dc16e94)
 
 ## Project layout
 
