@@ -109,6 +109,25 @@ class SpotifyClient:
         logger.info("Fetched %d tracks from playlist %s", len(tracks), playlist_id)
         return tracks
 
+    def get_playlist_name(self, playlist_id: str) -> str:
+        """Return the *display name* of the playlist.
+
+        We hit the ``/playlists/{id}`` endpoint but request only the ``name``
+        field to reduce payload size.
+        """
+
+        token = self._get_access_token()
+        headers = {"Authorization": f"Bearer {token}"}
+        url = f"{self._BASE_URL}/playlists/{playlist_id}"
+        params = {"fields": "name"}
+
+        resp = requests.get(url, headers=headers, params=params, timeout=config.REQUEST_TIMEOUT)
+        resp.raise_for_status()
+        name = resp.json().get("name")
+        if not name:
+            raise RuntimeError(f"Could not fetch playlist name for ID {playlist_id}")
+        return name
+
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------

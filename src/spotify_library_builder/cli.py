@@ -18,7 +18,7 @@ from tqdm import tqdm
 from . import config
 from .converter import ConverterClient
 from .spotify_client import SpotifyClient
-from .utils import ensure_directory
+from .utils import ensure_directory, slugify
 from .youtube_client import YouTubeClient
 
 LOG_FORMAT = "%(asctime)s [%(levelname)s] %(name)s – %(message)s"
@@ -37,10 +37,19 @@ def build_library(
     # Create a timestamped sub-folder for this run so downloads stay organised
     ensure_directory(output_dir)
 
-    session_dir = output_dir / f"sp-lib-builder-{datetime.now().strftime('%m-%d-%Y-%H-%M-%S')}"
+    spotify = SpotifyClient()
+
+    # Use playlist name for folder prefix
+    try:
+        playlist_name = spotify.get_playlist_name(playlist_id)
+    except Exception as exc:
+        logging.warning("Could not fetch playlist name: %s – falling back to generic prefix", exc)
+        playlist_name = "sp-lib-builder"
+
+    folder_prefix = slugify(playlist_name) or "sp-lib-builder"
+    session_dir = output_dir / f"{folder_prefix}-{datetime.now().strftime('%m-%d-%Y-%H-%M-%S')}"
     ensure_directory(session_dir)
 
-    spotify = SpotifyClient()
     youtube = YouTubeClient()
     converter = ConverterClient()
 
