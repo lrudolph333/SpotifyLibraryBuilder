@@ -29,31 +29,55 @@ class YouTubeClient:
     # ------------------------------------------------------------------
 
     def search_first_video(self, query: str) -> Optional[str]:
-        """Return the full YouTube URL for the top search result.
+        """Return a YouTube URL for the best-guess audio source.
 
-        If no result is found ``None`` is returned.
+        The method tries several increasingly relaxed searches:
+
+        1. ``"<query> lyrics"`` with *high-definition* filter.
+        2. ``"<query> lyrics"`` without the HD filter.
+        3. Original ``query`` with *high-definition* filter.
+        4. Original ``query`` with no extra filters.
+
+        Rationale: lyric videos often carry album-quality audio and are less
+        likely to contain long intros/outros or crowd noise. We also prefer HD
+        uploads (``videoDefinition=high``) which typically have better audio
+        streams.
         """
 
-        params = {
-            "part": "snippet",
-            "type": "video",
-            "q": query,
-            "key": self._api_key,
-            "maxResults": 1,
-            "safeSearch": "strict",
-        }
+        def _attempt(search_query: str, hd_only: bool) -> Optional[str]:
+            params = {
+                "part": "snippet",
+                "type": "video",
+                "q": search_query,
+                "key": self._api_key,
+                "maxResults": 1,
+                "safeSearch": "strict",
+            }
+            if hd_only:
+                params["videoDefinition"] = "high"
 
-        logger.debug("Searching YouTube for: %s", query)
-        resp = requests.get(self._SEARCH_URL, params=params, timeout=config.REQUEST_TIMEOUT)
-        resp.raise_for_status()
-        items = resp.json().get("items", [])
+            logger.debug("YouTube search – query='%s' hd_only=%s", search_query, hd_only)
+            resp = requests.get(self._SEARCH_URL, params=params, timeout=config.REQUEST_TIMEOUT)
+            resp.raise_for_status()
+            items = resp.json().get("items", [])
+            if not items:
+                return None
+            return items[0]["id"].get("videoId")
 
-        if not items:
-            logger.warning("No YouTube results for query: %s", query)
-            return None
-        # TODO: we may want to save multiple videos instead of the top result
-        video_id = items[0]["id"]["videoId"]
-        return f"https://www.youtube.com/watch?v={video_id}"
+        search_plan = [
+            (f"{query} lyrics", True),
+            (f"{query} lyrics", False),
+            (query, True),
+            (query, False),
+        ]
+
+        for q, hd in search_plan:
+            video_id = _attempt(q, hd)
+            if video_id:
+                return f"https://www.youtube.com/watch?v={video_id}"
+
+        logger.warning("No YouTube results for query: %s (after trying lyric/HD variants)", query)
+        return None
 
 
 __all__ = ["YouTubeClient"] 

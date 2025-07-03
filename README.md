@@ -13,7 +13,10 @@ pip install -e .  # development install
 Dependencies:
 
 - Python 3.9+
-- ffmpeg (must be on your `$PATH`) – macOS: `brew install ffmpeg`, Ubuntu: `sudo apt install ffmpeg`, Windows: see <https://ffmpeg.org/download.html>.
+- ffmpeg (must be on your `$PATH`)
+  – macOS: `brew install ffmpeg`
+  - Ubuntu: `sudo apt install ffmpeg`
+  - Windows: see <https://ffmpeg.org/download.html>.
 
 This installs the console script `sp-lib-builder`.
 
@@ -123,3 +126,10 @@ src/spotify_library_builder/
 ## Disclaimer
 
 This project interacts with Spotify and YouTube. Make sure your usage complies with their respective terms of service.
+
+**Audio quality**: Downloads rely on whatever audio track is present in the chosen YouTube video. Some uploads may contain silent gaps, skips, commentary, or other inconsistencies. Always verify the resulting MP3s and replace any poor-quality sources if necessary.
+
+### API documentation
+
+- [Spotify Web API – Getting started](https://developer.spotify.com/documentation/web-api/tutorials/getting-started)
+- [YouTube Data API v3](https://developers.google.com/youtube/v3)
