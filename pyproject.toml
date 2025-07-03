@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spotify-library-builder"
+version = "0.1.0"
+authors = [
+  { name = "Your Name", email = "you@example.com" }
+]
+description = "CLI tool that builds a local MP3 library from a Spotify playlist by fetching YouTube videos and converting them to MP3."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = [
+  "requests>=2.31.0",
+  "python-dotenv>=1.0.0",
+  "tqdm>=4.66.0",
+  "yt-dlp>=2025.6.30"
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent"
+]
+
+[project.urls]
+"Source" = "https://github.com/yourname/SpotifyLibraryBuilder"
+
+[project.scripts]
+sp-lib-builder = "spotify_library_builder.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"] 

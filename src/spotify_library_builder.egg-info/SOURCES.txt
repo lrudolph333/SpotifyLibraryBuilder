@@ -1,0 +1,16 @@
+README.md
+pyproject.toml
+src/spotify_library_builder/__init__.py
+src/spotify_library_builder/__main__.py
+src/spotify_library_builder/cli.py
+src/spotify_library_builder/config.py
+src/spotify_library_builder/converter.py
+src/spotify_library_builder/spotify_client.py
+src/spotify_library_builder/utils.py
+src/spotify_library_builder/youtube_client.py
+src/spotify_library_builder.egg-info/PKG-INFO
+src/spotify_library_builder.egg-info/SOURCES.txt
+src/spotify_library_builder.egg-info/dependency_links.txt
+src/spotify_library_builder.egg-info/entry_points.txt
+src/spotify_library_builder.egg-info/requires.txt
+src/spotify_library_builder.egg-info/top_level.txt

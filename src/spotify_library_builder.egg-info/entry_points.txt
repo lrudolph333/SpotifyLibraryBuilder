@@ -1,0 +1,2 @@
+[console_scripts]
+sp-lib-builder = spotify_library_builder.cli:main
