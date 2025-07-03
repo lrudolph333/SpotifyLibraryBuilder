@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "spotify-library-builder"
 version = "0.1.0"
 authors = [
-  { name = "Trey Good", website = "https://treyr.me" }
+  { name = "Trey Good", email = "trey.ru.iii@gmail.com" }
 ]
 description = "CLI tool that builds a local MP3 library from a Spotify playlist by fetching YouTube videos and converting them to MP3."
 readme = "README.md"
