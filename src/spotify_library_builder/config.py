@@ -43,14 +43,6 @@ else:
 SPOTIFY_CLIENT_ID: str | None = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_CLIENT_SECRET: str | None = os.getenv("SPOTIFY_CLIENT_SECRET")
 YOUTUBE_API_KEY: str | None = os.getenv("YOUTUBE_API_KEY")
-# Legacy keys retained for backward compatibility but no longer required
-# YT2MP3_API_KEY: str | None = os.getenv("YT2MP3_API_KEY")
-# YT2MP3_RAPIDAPI_KEY: str | None = os.getenv("YT2MP3_RAPIDAPI_KEY")
-# YT2MP3_BASE_URL: str = os.getenv("YT2MP3_BASE_URL", "https://youtube-to-mp315.p.rapidapi.com/")
-
-# The legacy YouTube-to-MP3 service is no longer used, so the associated key
-# is optional.
-_legacy_YT2MP3_API_KEY: str | None = os.getenv("YT2MP3_API_KEY")  # kept for backward compatibility
 
 MANDATORY_VARS = {
     "SPOTIFY_CLIENT_ID": SPOTIFY_CLIENT_ID,
@@ -86,7 +78,6 @@ __all__ = [
     "SPOTIFY_CLIENT_ID",
     "SPOTIFY_CLIENT_SECRET",
     "YOUTUBE_API_KEY",
-    # "YT2MP3_API_KEY",
     "DOWNLOADS_DIR",
     "REQUEST_TIMEOUT",
     "MissingEnvironmentVariable",

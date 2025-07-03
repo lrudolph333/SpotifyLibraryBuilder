@@ -1,47 +1,59 @@
 # SpotifyLibraryBuilder
 
-A tool to download a spotify playlist to local harddrive via youtube to mp3 api.
+A command-line tool that turns any public Spotify playlist into a neatly-organised local MP3 collection. Tracks are located on YouTube, downloaded with **yt-dlp**, and converted to MP3 using **ffmpeg**.
 
 ## Installation
-
-Using `pip` and a virtual environment is recommended::
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .  # install in editable / development mode
+pip install -e .  # development install
 ```
 
-This will install the console script `sp-lib-builder`.
+Dependencies:
+
+- Python 3.9+
+- ffmpeg (must be on your `$PATH`) – macOS: `brew install ffmpeg`, Ubuntu: `sudo apt install ffmpeg`, Windows: see <https://ffmpeg.org/download.html>.
+
+This installs the console script `sp-lib-builder`.
 
 ## Configuration
 
-1. Copy `env.template` to `.env` in the project root.
-2. Fill in your credentials:
-   - **Spotify**: `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET`
-   - **Google**: `YOUTUBE_API_KEY`
-   - **Conversion service**: `YT2MP3_API_KEY`
+1. Copy `env.template` → `.env`
+2. Fill in your API credentials:
+   - **Spotify** `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`
+   - **Google / YouTube Data API v3** `YOUTUBE_API_KEY`
 
-The application loads the `.env` file automatically at runtime.
+The `.env` file is loaded automatically at runtime.
 
 ## Usage
 
 ```bash
-# Download every track from the playlist into ~/Downloads
+# Basic – save into ~/Downloads
 sp-lib-builder <spotify-playlist-id>
 
-# Choose a custom output directory
-sp-lib-builder <playlist-id> --output /path/to/mp3s
+# Choose a different root directory
+sp-lib-builder <playlist-id> --output /path/to/library
 ```
 
-The script will:
+For every run the tool creates a timestamped folder inside the `--output` directory, e.g.:
 
-1. Fetch the track titles and artist names from the given Spotify playlist.
-2. Search YouTube for the first matching video for each song.
-3. Request an MP3 conversion from the public YouTube→MP3 API.
-4. Poll the conversion status and download the finished file into your chosen directory.
+```
+/path/to/library/
+└── sp-lib-builder-07-03-2025-15-42-10/
+    ├── Track-1.mp3
+    ├── Track-2.mp3
+    └── ...
+```
 
-Progress is displayed via a live progress-bar and detailed logs.
+### What happens under the hood?
+
+1. Playlist metadata is fetched from Spotify.
+2. The first matching YouTube video for each song is located via the YouTube Data API.
+3. yt-dlp downloads the best audio stream and converts it to MP3 (192 kbps) via ffmpeg.
+4. Files are written to the timestamped folder, avoiding name collisions automatically.
+
+Progress is shown with a live `tqdm` progress-bar and detailed log output.
 
 ## Project layout
 
@@ -49,24 +61,27 @@ Progress is displayed via a live progress-bar and detailed logs.
 src/spotify_library_builder/
     cli.py            # Command-line interface
     config.py         # Environment variable handling
-    converter.py      # YouTube→MP3 integration
+    converter.py      # yt-dlp + ffmpeg integration
     spotify_client.py # Spotify API wrapper
     youtube_client.py # YouTube search wrapper
     utils.py          # Generic utilities
 ```
 
-## Packaging for PyPI
+## Publishing to PyPI
 
-The project is configured with `pyproject.toml` using _setuptools_. To build a wheel and sdist:
+1. Ensure `pyproject.toml` has an up-to-date version and author/contact info.
+2. Update the changelog (if any) and commit your changes.
+3. Build the distribution artifacts:
+   ```bash
+   python -m build   # requires `pip install build`
+   ```
+4. Upload to PyPI (test first!):
+   ```bash
+   python -m twine upload --repository testpypi dist/*
+   # once happy:
+   python -m twine upload dist/*
+   ```
 
-```bash
-python -m build
-```
+## Disclaimer
 
----
-
-### Disclaimer
-
-This project interacts with third-party services that may impose rate-limits or change
-without notice. Use responsibly and abide by the terms of service of Spotify,
-YouTube and the conversion API.
+This project interacts with Spotify and YouTube. Make sure your usage complies with their respective terms of service.

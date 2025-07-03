@@ -79,7 +79,7 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "-o",
         type=Path,
         default=config.DOWNLOADS_DIR,
-        help="Directory under which a timestamped run folder will be created (default: ~/SpotifyLibraryBuilderDownloads)",
+        help="Directory under which a timestamped run folder will be created (default: ~/Downloads)",
     )
     return parser.parse_args(argv)
 
